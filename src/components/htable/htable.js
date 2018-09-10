@@ -109,20 +109,11 @@ class HTable extends React.Component {
         return (
             <div>
                 <Grid>
-                    <Row>
-                        <Col md={12}>
-                            <h1>Tabell</h1>
-                        </Col>
-                    </Row>
-            
-               
 
                     <FormGroup controlId="formControlsTextarea">
                         <ControlLabel>Enter Query:</ControlLabel>
-                        <FormControl id={"mdx-query"} className={"text-nowrap"} style={{ height: 200 }} componentClass="textarea" placeholder="write query here..." />
+                        <FormControl id={"mdx-query"} spellcheck="false" className={"text-nowrap"} style={{ height: 200 }} componentClass="textarea" placeholder="write query here..." />
                     </FormGroup>
-        
-                    <Row> <hr /> </Row>
                     <Row>
                         <Col md={2}>
                             <Button bsSize="small" onClick={() => this.getDataHandler()}>Execute</Button>

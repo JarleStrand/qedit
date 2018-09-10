@@ -5,9 +5,8 @@ import {
 import PropTypes from 'prop-types'
 import './mainpage.css'
 import Menu from '../menu/menu.container'
-import AccountTable from '../accounttable/accounttable.container'
 import HTable from '../htable/htable.container'
-import Graph from '../graph/graph.container'
+
 
 
 
@@ -36,29 +35,17 @@ class ProtoMainPage extends React.Component {
 
     componentDidMount() {
 
-        // load time and org units dimensions from api
-        let date = new Date()
-        let year = date.getFullYear().toString();
-        let month = (date.getMonth() + 1).toString();
-        if (month.length === 1)
-            month = "0" + month
-
-        this.props.getTimeDim(year + "-" + month) // expand to current month
-        this.props.getOrgUnitsDim("All") // expand to root
-
-        this.props.clearAccountingData()
+    
 
         // define main menu with links, and redirect to account page
         this.props.clearMenu("mainmenu");
-        this.props.addMenuItem("mainmenu", "Regnskapsrapport", "/account")
-        this.props.addMenuItem("mainmenu", "Graf", "/graph")        
-        this.props.addMenuItem("mainmenu", "HTabell", "/htable")
-        this.props.addMenuItem("mainmenu", "Logg av", this.props.doLogout)
+ 
+        this.props.addMenuItem("mainmenu", "Query", "/query")
         this.props.selectMenuItem("mainmenu", 0)
 
 
         
-        this.setLink("/account")
+        this.setLink("/query")
     }
 
 
@@ -73,16 +60,13 @@ class ProtoMainPage extends React.Component {
         return (
             <div className="page">
                 <span className="mainpage-mainpanel">
-                    {this.state.currLink === "/account" ? <AccountTable /> : null}
-                    {this.state.currLink === "/graph" ? <Graph /> : null}
-                    {this.state.currLink === "/htable" ? <HTable /> : null}
+                    {this.state.currLink === "/query" ? <HTable /> : null}
                 </span>
                 <span className="mainpage-sidepanel" >
                     <div className="filler" />
-                    <h1 className="corp-name">HALCYON</h1>
-                    <img className="center-image" src={"https://www.bixzit.com/bird_red128.png"} alt="logo" />
+
                     <div className="filler" />
-                    <div className="username">{this.props.userName}</div>
+
                     <div className="smallfiller" />
                     <Menu menuId="mainmenu" setLink={this.setLink} />
                 </span>
