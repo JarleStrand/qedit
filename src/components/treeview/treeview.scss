@@ -1,0 +1,17 @@
+
+.treeview-item-one {
+    padding-left: 15px;
+    white-space: nowrap;
+    cursor: default;
+
+    .treeview-selected{
+        background-color: darkgray
+    }
+
+    .fa {
+        padding-right: 5px;
+        cursor: default;
+    }
+
+}
+
