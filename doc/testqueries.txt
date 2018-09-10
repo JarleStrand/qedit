@@ -1,0 +1,41 @@
+
+SELECT {[HFM Account].[HFM Main].&[PL0100],[HFM Account].[HFM Main].&[PL1010]}*{[Scenario].[Scenario].&[ACT]}
+ ON 0,
+[Profitcenter].[Profitcenter].&[31026].CHILDREN *[Time].[Year - Quarter - Month].[Month].&[2017-05] ON 1
+FROM EDW
+WHERE
+([Time].[Year].&[2017])
+
+
+
+WITH 
+CALCULATED MEMBER [Profitcenter].[Profitcenter].[Avvik] AS 
+   ([Profitcenter].[Profitcenter].&[15072]) - ([Profitcenter].[Profitcenter].&[15073])
+   , SOLVE_ORDER = 7
+CALCULATED MEMBER [HFM Account].[HFM Main].[Margin] AS
+   1000.0 * ([HFM Account].[HFM Main].&[PL0100]) / ([HFM Account].[HFM Main].&[PL1010]),
+   SOLVE_ORDER = 5
+SELECT  
+{ [Profitcenter].[Profitcenter].&[15072],  [Profitcenter].[Profitcenter].&[15073],
+  [Profitcenter].[Profitcenter].[Avvik]} ON 0,
+{[HFM Account].[HFM Main].&[PL0100], [HFM Account].[HFM Main].&[PL1010], [HFM Account].[HFM Main].[Margin]} ON 1
+FROM EDW
+WHERE
+([Scenario].[Scenario].&[Act], [Time].[Month].&[2017-05], [Time].[Year].&[2017])
+
+
+
+SELECT NON EMPTY {[HFM Account].[HFM Main].&[PL0100],[HFM Account].[HFM Main].&[PL1010]}*{[Scenario].[Scenario].&[ACT]} ON 0,
+[Profitcenter].[Profitcenter].&[31026].CHILDREN *
+{[Time].[Year - Quarter - Month].[Month].&[2017-05]}
+ ON 1
+FROM
+   (SELECT [HFM Account].[HFM Main].&[PL0100] ON 0 FROM 
+   (SELECT {[Profitcenter].[Profitcenter].&[15070],[Profitcenter].[Profitcenter].&[15074]} ON 0 FROM 
+   (SELECT [Time].[Month].[All]*[HFM Account].[HFM Main].&[All] ON 0 FROM 
+   EDW)))
+WHERE
+([Time].[Quarter].&[2017-Q2], [Time].[Year].&[2017])
+
+
+

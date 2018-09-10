@@ -3,7 +3,7 @@
 
 import { connect } from 'react-redux'
 import HTable from '../htable/htable'
-import { mdxConnect, mdxQuery } from '../../state/actions'
+import { mdxConnect, mdxQuery, mdxClearData } from '../../state/actions'
 
 
 
@@ -17,6 +17,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps =  {
   mdxConnect,
+  mdxClearData,
   mdxQuery
 }
 

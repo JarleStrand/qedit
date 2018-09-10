@@ -4,6 +4,7 @@ import {startRequests, endRequests} from '../reqpending/reqpending.actions'
 
 export const MDX_SETCONNECTED = 'MDX_CONNECTED'
 export const MDX_SETDATA = 'MDX_SETDATA'
+export const MDX_CLEARDATA = 'MDX_CLEARDATA'
 
 
 
@@ -11,6 +12,10 @@ export const MDX_SETDATA = 'MDX_SETDATA'
 
 export function mdxSetConnected() {
     return { type: MDX_SETCONNECTED }
+}
+
+export function mdxClearData() {
+    return { type: MDX_CLEARDATA }
 }
 
 

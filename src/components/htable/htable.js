@@ -8,10 +8,15 @@ class HTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        this.state = {
+                querytext: '',
+        };
+        this.handleChange = this.handleChange.bind(this);
         this.makeTable = this.makeTable.bind(this);
         this.makeOneRow = this.makeOneRow.bind(this);
         this.makeAllRows = this.makeAllRows.bind(this);
         this.setCursor = this.setCursor.bind(this);
+        this.convertResToTable = this.convertResToTable.bind(this);
     
 
     }
@@ -25,11 +30,20 @@ class HTable extends React.Component {
     }
 
 
+
+    handleChange(e) {
+        if(this.props)
+            this.props.mdxClearData();
+        if(e)
+            this.setState({ querytext: e.target.value });
+    }
+
+
     setCursor(line, column)
     {
         var txtarea = document.getElementById("mdx-query");
 
-        var txt = txtarea.value;
+        var txt = this.state.querytext;
 
         var lines = txt.split("\n")
         var numLines = lines.length;
@@ -53,22 +67,11 @@ class HTable extends React.Component {
 
     getDataHandler() {
 
-        var mdx = `
 
+        if(this.state.querytext.length>0){
+            this.props.mdxQuery(this.state.querytext);
 
-        SELECT {[HFM Account].[HFM Main].&[PL0100],[HFM Account].[HFM Main].&[PL1010]}*{[Scenario].[Scenario].&[ACT]}
-        ON 0,
-       [Profitcenter].[Profitcenter].&[31026].CHILDREN *[Time].[Year - Quarter - Month].[Month].&[2017-05] ON 1
-       FROM EDW
-       WHERE
-       ([Time].[Year].&[2017])
-       
-         
-        `        
-        this.setCursor(2,5)
-
-
-         this.props.mdxQuery(mdx);
+        }
 
     }
 
@@ -76,7 +79,7 @@ class HTable extends React.Component {
 
     makeOneRow(d){
         return d.map(item => {
-               return (<td>{item.value}</td>)
+               return (<td>{item}</td>)
         }) ;
 
     }
@@ -89,22 +92,69 @@ class HTable extends React.Component {
     }
     
 
-    makeTable(){
+    makeTable(tableData){
 
-        var tableData =  this.props.mdxRes ? this.props.mdxRes.measures : null;
         if(!tableData)
             tableData = [];
 
 
         return (
-            <table>
+            <table border="1">
                 {this.makeAllRows(tableData)}
             </table>
         )
     }
 
 
+    convertResToTable(){
+        if(this.props.mdxRes){
+            var axisList = this.props.mdxRes.axis;
+            var measures = this.props.mdxRes.measures;            
+            var colDims = axisList[0][0].length
+            var rowDims = axisList[1][0].length
+            var colWithMeasures = measures[0].length
+            var rowWithMeasures = measures.length            
+
+
+            var i
+            var j
+            var line
+
+            var table = [];
+            for(i =0; i< rowDims; i++){
+                line = [];
+                for(j=0; j<colDims; j++)
+                    line.push("");
+                for(j=0; j<colWithMeasures; j++)
+                    line.push(axisList[1][j][i].name);
+
+                table.push(line)
+            }
+
+            for(i=0; i<rowWithMeasures; i++){
+                line = [];
+                for(j=0; j<colDims; j++)
+                    line.push(axisList[0][i][j].name);
+                for(j=0; j<colWithMeasures; j++)
+                    line.push(measures[i][j].value);
+
+                table.push(line)
+
+            }
+
+            return table;
+        }
+        else
+            return [];
+
+    }
+
+
     render() {
+
+        if(this.props.mdxRes && this.props.mdxRes.error){
+            this.setCursor(this.props.mdxRes.error.line, this.props.mdxRes.error.column)
+        };
 
         return (
             <div>
@@ -112,7 +162,8 @@ class HTable extends React.Component {
 
                     <FormGroup controlId="formControlsTextarea">
                         <ControlLabel>Enter Query:</ControlLabel>
-                        <FormControl id={"mdx-query"} spellcheck="false" className={"text-nowrap"} style={{ height: 200 }} componentClass="textarea" placeholder="write query here..." />
+                        <FormControl id={"mdx-query"} spellcheck="false" className={"text-nowrap"} style={{ height: 200 }} componentClass="textarea" placeholder="write query here..." 
+                            value={this.state.querytext} onChange={this.handleChange}/>
                     </FormGroup>
                     <Row>
                         <Col md={2}>
@@ -121,7 +172,7 @@ class HTable extends React.Component {
                     </Row>
                     <Row> <hr /> </Row>
                     <Row>
-                      {this.makeTable()}
+                      {this.props.mdxRes && this.props.mdxRes.error? this.props.mdxRes.error.text : this.makeTable(this.convertResToTable())}
                     </Row>
                 </Grid>
             </div>

@@ -1,5 +1,5 @@
 
-import { MDX_SETCONNECTED, MDX_SETDATA } from './mdx.actions'
+import { MDX_SETCONNECTED, MDX_SETDATA, MDX_CLEARDATA } from './mdx.actions'
 
 
 
@@ -11,6 +11,9 @@ const mdxstate = (state, action) => {
 
         case MDX_SETDATA:
             return { connected: state.connected, data: action.data};
+
+        case MDX_CLEARDATA:
+            return { connected: state.connected, data: null};
 
         default:
             if (typeof (state) === 'undefined')
