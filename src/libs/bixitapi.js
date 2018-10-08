@@ -22,7 +22,7 @@ export class BixitApi{
 
 
     static connectCube(){
-        this.socket = new WebSocket("wss://localhost:50235");
+        this.socket = new WebSocket("wss://localhost:8080");
         return new Promise((accept, reject) => {
             //accept("open");
             this.socket.onopen = () => { accept("open")};

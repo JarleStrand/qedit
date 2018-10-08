@@ -69,7 +69,7 @@ class HTable extends React.Component {
 
 
         if(this.state.querytext.length>0){
-            this.props.mdxQuery(this.state.querytext);
+            this.props.mdxQuery(JSON.stringify({ mdx: this.state.querytext, ref: {a: "REFERANSEKODE", b: [2,5,3]} }));
 
         }
 
