@@ -1,4 +1,37 @@
 
+
+SELECT {[Measures].[Amount GL]*[Scenario].&[Act]} ON 0,
+NON EMPTY
+[Voucher].[Voucher].MEMBERS
+*[Voucher].[VoucherName].MEMBERS
+*[Voucher].[Voucherheader].MEMBERS
+*[Voucher].[ExternalReference].MEMBERS
+  ON 1
+FROM EDW
+WHERE([Time].[Year - Quarter - Month].[Month].&[2017-05],
+[Profitcenter].[Profitcenter].&[15073],
+[HFM Account].[HFM Main].&[PL1330])
+
+
+
+SELECT  
+[Profitcenter].[Profitcenter].&[15072]  ON 0,
+[HFM Account].[HFM Main].&[PL0100] ON 1
+FROM EDW
+
+
+
+SELECT {[HFM Account].[HFM Main].&[PL0100],[HFM Account].[HFM Main].&[PL1010]}*{[Scenario].[Scenario].&[Act]}*
+{[Measures].[Measures].[Amount GL],[Measures].[Measures].[Amount Credit], [Measures].[Measures].[Amount Debit]}
+ ON 0,
+[Profitcenter].[Profitcenter].&[31026].CHILDREN *[Time].[Year - Quarter - Month].[Month].&[2017-05] ON 1
+FROM EDW
+WHERE
+([Time].[Year].&[2017])
+
+
+
+
 SELECT {[HFM Account].[HFM Main].&[PL0100],[HFM Account].[HFM Main].&[PL1010]}*{[Scenario].[Scenario].&[Act]}
  ON 0,
 [Profitcenter].[Profitcenter].&[31026].CHILDREN *[Time].[Year - Quarter - Month].[Month].&[2017-05] ON 1
